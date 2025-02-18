@@ -1,0 +1,65 @@
+\section{Desarrollo}
+Para llevar a cabo esta actividad, es fundamental comprender cómo funcionan los pines GPIO de la Raspberry Pi y su capacidad para interactuar con dispositivos electrónicos. Un LED es un componente que emite luz cuando recibe corriente, mientras que un botón actúa como un interruptor que permite o bloquea el flujo de corriente. Mediante la programación, se controlará el encendido y apagado del LED en respuesta a la pulsación del botón.
+
+\subsection{Materiales necesarios}
+Para esta práctica, se requieren los siguientes componentes:
+\begin{itemize}
+	\item \textbf{Raspberry Pi} (cualquier modelo con pines GPIO disponibles).
+	\item \textbf{LED} (color opcional).
+	\item \textbf{Resistencia de 330\textohm} (para limitar la corriente del LED y evitar daños).
+	\item \textbf{Botón pulsador}.
+	\item \textbf{Resistencia de 10k\textohm} (pull-down para evitar lecturas erróneas).
+	\item \textbf{Cables de conexión}.
+	\item \textbf{Protoboard} (para facilitar las conexiones).
+\end{itemize}
+
+\subsection{Conexión del circuito}
+La conexión de los componentes se realizará de la siguiente manera:
+\begin{itemize}
+	\item El \textbf{ánodo (+) del LED} se conecta a un \textbf{pin GPIO de la Raspberry Pi} a través de la resistencia de 330\textohm.
+	\item El \textbf{cátodo (-) del LED} se conecta a \textbf{GND} (tierra).
+	\item Uno de los pines del \textbf{botón} se conecta a otro \textbf{pin GPIO} de la Raspberry Pi.
+	\item El otro pin del botón se conecta a \textbf{GND}.
+	\item Se coloca una \textbf{resistencia pull-down de 10k\textohm} entre el pin GPIO del botón y GND para asegurar una lectura estable.
+\end{itemize}
+
+\subsection{Explicación del funcionamiento}
+\begin{enumerate}
+	\item Se configura la Raspberry Pi para interpretar el estado del botón y controlar el LED en consecuencia.
+	\item Cuando el botón se presiona, se cambia el estado del LED (encendido/apagado).
+	\item Se utiliza un retraso en la programación para evitar lecturas incorrectas causadas por el rebote mecánico del botón.
+	\item Al finalizar la ejecución, se restablecen los pines GPIO a su estado original para evitar conflictos en futuras conexiones.
+\end{enumerate}
+
+\subsection{Pruebas y resultados}
+Para verificar el funcionamiento del sistema:
+\begin{itemize}
+	\item Conectar todos los componentes correctamente.
+	\item Ejecutar el programa en la Raspberry Pi.
+	\item Pulsar el botón y observar cómo el LED cambia de estado (se enciende o apaga con cada pulsación).
+\end{itemize}
+
+Si el LED no responde correctamente, se deben revisar las conexiones y asegurarse de que las resistencias estén en su lugar.
+
+\subsection{Aplicaciones y mejoras}
+Este sistema básico puede extenderse con diversas mejoras, como:
+\begin{itemize}
+	\item \textbf{Uso de interrupciones GPIO} en lugar de una lectura continua para optimizar el rendimiento.
+	\item \textbf{Implementación de múltiples botones} para controlar diferentes acciones.
+	\item \textbf{Conexión a una interfaz web o control remoto}, integrando tecnologías como Flask o MQTT para manejar el LED desde otro dispositivo.
+	\item \textbf{Automatización avanzada}, como encender el LED solo en ciertos horarios o en respuesta a sensores externos.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{C:/Users/mayit/Downloads/Boton Led 1}
+	\caption{Botón LED 1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{C:/Users/mayit/Downloads/Boton Led 2}
+	\caption{Botón LED 2}
+\end{figure}
+
+\newpage

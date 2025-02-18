@@ -1,0 +1,103 @@
+\documentclass[12pt]{article}
+
+% Paquetes básicos primero
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ragged2e}
+\usepackage[spanish]{babel}
+
+% Geometría y diseño
+\usepackage{geometry}
+\geometry{
+	letterpaper,
+	left=2.5cm,
+	right=2.5cm,
+	top=3cm,
+	bottom=3cm,
+	headheight=60pt,
+	headsep=1cm
+}
+
+% Paquetes de formato
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{lastpage}
+\usepackage{background}
+\usepackage{textcomp}
+
+% Paquetes para referencias
+\usepackage[round]{natbib}  % Configuración específica para citas
+\bibliographystyle{plainnat}  % Estilo de bibliografía
+
+% URLs y enlaces (hyperref debe ir al final)
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+% Configuración del encabezado y pie de página
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\definecolor{tecnmBlue}{RGB}{0, 43, 89}
+\definecolor{tecnmWhite}{RGB}{255, 255, 255}
+
+% Definir comandos para reducir la carga
+\newcommand{\smallgray}[1]{{\scriptsize\textcolor{gray}{#1}}}
+
+\fancyhead[L]{%
+	\hspace*{0.5cm}\raisebox{-2.2\height}{\includegraphics[height=1cm]{imagenes/logotecnm.png}}%
+}
+
+\fancyhead[R]{%
+	\raisebox{-1.7\height}{%
+		\begin{tabular}[b]{r}
+			{\scriptsize\textbf{Instituto Tecnológico de Morelia}}\\[-0.6em]
+			\smallgray{Subdirección Académica}\\[-0.6em]
+			\smallgray{Departamento de Sistemas y Computación}\\[-0.6em]
+			\smallgray{Internet de las Cosas}\\[-0.4em]
+			{\scriptsize Página \thepage\ de \pageref{LastPage}}
+		\end{tabular}%
+	}%
+}
+
+\makeatletter
+\renewcommand\@biblabel[1]{#1.}
+\makeatother
+
+\fancyfoot[L]{%
+	\small
+	Tarea 1
+	
+	\vspace{0.1cm}
+	
+	\small\textcolor{gray}{Equipo 1}
+}
+
+\fancyfoot[R]{%
+	\small
+	\textbf{Encendido y Apagado Led Button}%
+}
+
+% Definir comando para citas
+\newcommand{\cita}[1]{\cite{#1}}
+
+\begin{document}
+	\pagenumbering{arabic}
+	
+	
+	% Secciones principales
+	\input{sections/portada}
+	\input{sections/introduccion}
+	\input{sections/desarrollo}
+	\input{sections/conclusion}
+	
+	% Referencias
+	%\clearpage
+	%\addcontentsline{toc}{section}{Referencias}
+	%\bibliography{referencias} 
+	
+\end{document}
