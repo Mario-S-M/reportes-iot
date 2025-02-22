@@ -1,7 +1,8 @@
 \section{Introducción}
-El control de dispositivos electrónicos mediante microcomputadoras es una habilidad esencial en el desarrollo de proyectos de automatización y sistemas embebidos. La Raspberry Pi, gracias a sus pines GPIO (General Purpose Input/Output), permite la interacción con diversos componentes electrónicos, como sensores, motores y, en este caso, un LED y un botón.
+\noindent
+\justifying
+Los sensores ultrasónicos son ampliamente utilizados en aplicaciones de medición de distancia, detección de obstáculos y sistemas de navegación en robótica. El sensor HC-SR04 es un dispositivo de bajo costo que permite medir distancias mediante la emisión y recepción de ondas ultrasónicas, calculando el tiempo de retorno del eco para determinar la distancia a un objeto.
 
-En esta actividad, se implementará un sistema de encendido y apagado de un LED utilizando un botón como interruptor, lo que servirá para comprender el funcionamiento de los pines GPIO y la lógica de control digital. Se explorará la importancia de las resistencias pull-up y pull-down para evitar lecturas erróneas en el botón, además de la programación en Python para gestionar la entrada y salida de señales.
+En esta práctica, se implementa un sistema de medición de distancia con un sensor HC-SR04 conectado a una Raspberry Pi. Se configura la comunicación a través de los pines GPIO y se emplea un divisor de voltaje para garantizar la compatibilidad entre la señal de retorno del sensor (5V) y los pines de la Raspberry Pi (3.3V). Se desarrolla un script en Python para enviar pulsos de activación al sensor, capturar la señal de respuesta y calcular la distancia en centímetros.
 
-Este ejercicio representa un primer paso hacia el desarrollo de proyectos más complejos, como interfaces hombre-máquina, automatización de procesos y control remoto de dispositivos. A través de esta actividad, se reforzarán conocimientos en electrónica básica y programación, sentando las bases para futuros desarrollos en el mundo del hardware y la Internet de las Cosas (IoT).
-\newpage
+Este trabajo permite familiarizarse con la integración de sensores en sistemas embebidos, comprendiendo los principios básicos de la medición ultrasónica y su aplicación en proyectos de automatización, control de dispositivos y robótica. Además, refuerza el uso de la Raspberry Pi como una plataforma versátil para el desarrollo de soluciones tecnológicas.

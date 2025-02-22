@@ -1,65 +1,127 @@
 \section{Desarrollo}
-Para llevar a cabo esta actividad, es fundamental comprender cómo funcionan los pines GPIO de la Raspberry Pi y su capacidad para interactuar con dispositivos electrónicos. Un LED es un componente que emite luz cuando recibe corriente, mientras que un botón actúa como un interruptor que permite o bloquea el flujo de corriente. Mediante la programación, se controlará el encendido y apagado del LED en respuesta a la pulsación del botón.
+\subsection{Materiales}
+Para la implementación de este sistema de medición de distancia, se requieren los siguientes materiales:
 
-\subsection{Materiales necesarios}
-Para esta práctica, se requieren los siguientes componentes:
 \begin{itemize}
-	\item \textbf{Raspberry Pi} (cualquier modelo con pines GPIO disponibles).
-	\item \textbf{LED} (color opcional).
-	\item \textbf{Resistencia de 330\textohm} (para limitar la corriente del LED y evitar daños).
-	\item \textbf{Botón pulsador}.
-	\item \textbf{Resistencia de 10k\textohm} (pull-down para evitar lecturas erróneas).
-	\item \textbf{Cables de conexión}.
-	\item \textbf{Protoboard} (para facilitar las conexiones).
+	\item Raspberry Pi 4 (o versión compatible)
+	\item Sensor ultrasónico HC-SR04
+	\item Protoboard
+	\item Resistencias de 1 k\textohm{} y 2 k\textohm{} (para el divisor de voltaje)
+	\item Cables de conexión (jumper)
+	\item Fuente de alimentación para la Raspberry Pi (5V, 3A)
 \end{itemize}
 
-\subsection{Conexión del circuito}
-La conexión de los componentes se realizará de la siguiente manera:
+\subsection{Principio de funcionamiento}
+El sensor HC-SR04 mide la distancia mediante la emisión de un pulso ultrasónico de 40 kHz a través de su pin \textit{Trig}. Este pulso viaja hasta un objeto y se refleja de vuelta al sensor, donde es recibido en el pin \textit{Echo}. La Raspberry Pi mide el tiempo transcurrido entre la emisión y recepción del pulso y, utilizando la velocidad del sonido en el aire (343 m/s), calcula la distancia con la siguiente ecuación:
+
+\begin{equation}
+	\mathrm{Distancia} = \frac{\mathrm{Tiempo\ de\ respuesta} \times 34300}{2}
+\end{equation}
+
+\subsection{Conexiones eléctricas}
+Para conectar el sensor HC-SR04 a la Raspberry Pi, se utiliza el siguiente esquema:
+
 \begin{itemize}
-	\item El \textbf{ánodo (+) del LED} se conecta a un \textbf{pin GPIO de la Raspberry Pi} a través de la resistencia de 330\textohm.
-	\item El \textbf{cátodo (-) del LED} se conecta a \textbf{GND} (tierra).
-	\item Uno de los pines del \textbf{botón} se conecta a otro \textbf{pin GPIO} de la Raspberry Pi.
-	\item El otro pin del botón se conecta a \textbf{GND}.
-	\item Se coloca una \textbf{resistencia pull-down de 10k\textohm} entre el pin GPIO del botón y GND para asegurar una lectura estable.
+	\item \textbf{VCC} (HC-SR04) $\rightarrow$ \textbf{5V} (Raspberry Pi)
+	\item \textbf{GND} (HC-SR04) $\rightarrow$ \textbf{GND} (Raspberry Pi)
+	\item \textbf{Trig} (HC-SR04) $\rightarrow$ \textbf{GPIO 23} (Raspberry Pi)
+	\item \textbf{Echo} (HC-SR04) $\rightarrow$ \textbf{Divisor de voltaje} $\rightarrow$ \textbf{GPIO 24} (Raspberry Pi)
 \end{itemize}
 
-\subsection{Explicación del funcionamiento}
-\begin{enumerate}
-	\item Se configura la Raspberry Pi para interpretar el estado del botón y controlar el LED en consecuencia.
-	\item Cuando el botón se presiona, se cambia el estado del LED (encendido/apagado).
-	\item Se utiliza un retraso en la programación para evitar lecturas incorrectas causadas por el rebote mecánico del botón.
-	\item Al finalizar la ejecución, se restablecen los pines GPIO a su estado original para evitar conflictos en futuras conexiones.
-\end{enumerate}
+\subsubsection{Divisor de voltaje}
+Dado que el pin \textit{Echo} del HC-SR04 devuelve una señal de 5V y la Raspberry Pi solo soporta señales de 3.3V en sus pines GPIO, es necesario utilizar un divisor de voltaje con resistencias:
 
-\subsection{Pruebas y resultados}
-Para verificar el funcionamiento del sistema:
 \begin{itemize}
-	\item Conectar todos los componentes correctamente.
-	\item Ejecutar el programa en la Raspberry Pi.
-	\item Pulsar el botón y observar cómo el LED cambia de estado (se enciende o apaga con cada pulsación).
+	\item Conectar una resistencia de \textbf{1 k\textohm{}} entre el pin \textit{Echo} y el GPIO 24 de la Raspberry Pi.
+	\item Conectar una resistencia de \textbf{2 k\textohm{}} entre el GPIO 24 y GND.
 \end{itemize}
 
-Si el LED no responde correctamente, se deben revisar las conexiones y asegurarse de que las resistencias estén en su lugar.
+Este divisor reduce la señal de 5V a aproximadamente 3.3V, protegiendo la Raspberry Pi.
 
-\subsection{Aplicaciones y mejoras}
-Este sistema básico puede extenderse con diversas mejoras, como:
+\subsection{Implementación en Python}
+Para obtener la medición de distancia, se utiliza un script en Python que controla la activación del sensor y mide el tiempo de respuesta. A continuación, se presenta el código para la medición de distancia:
+
+\begin{verbatim}
+	import RPi.GPIO as GPIO
+	import time
+	
+	# Definir pines
+	TRIG = 23
+	ECHO = 24
+	
+	# Configuración de pines
+	GPIO.setmode(GPIO.BCM)
+	GPIO.setup(TRIG, GPIO.OUT)
+	GPIO.setup(ECHO, GPIO.IN)
+	
+	def medir_distancia():
+	GPIO.output(TRIG, True)
+	time.sleep(0.00001)
+	GPIO.output(TRIG, False)
+	
+	while GPIO.input(ECHO) == 0:
+	inicio = time.time()
+	
+	while GPIO.input(ECHO) == 1:
+	fin = time.time()
+	
+	duracion = fin - inicio
+	distancia = (duracion * 34300) / 2  # Velocidad del sonido: 343 m/s
+	
+	return distancia
+	
+	try:
+	while True:
+	distancia = medir_distancia()
+	print(f"Distancia: {distancia:.2f} cm")
+	time.sleep(1)
+	except KeyboardInterrupt:
+	GPIO.cleanup()
+\end{verbatim}
+
+\subsection{Ejecución del código}
+Para ejecutar el código, se debe guardar el script como \texttt{ultrasonico.py} y ejecutarlo en la Raspberry Pi con el siguiente comando:
+
+\begin{verbatim}
+	python3 ultrasonico.py
+\end{verbatim}
+
+El programa imprimirá la distancia medida en centímetros cada segundo en la terminal.
+
+\subsection{Aplicaciones y beneficios}
+La integración del sensor HC-SR04 con la Raspberry Pi permite diversas aplicaciones, entre ellas:
+
 \begin{itemize}
-	\item \textbf{Uso de interrupciones GPIO} en lugar de una lectura continua para optimizar el rendimiento.
-	\item \textbf{Implementación de múltiples botones} para controlar diferentes acciones.
-	\item \textbf{Conexión a una interfaz web o control remoto}, integrando tecnologías como Flask o MQTT para manejar el LED desde otro dispositivo.
-	\item \textbf{Automatización avanzada}, como encender el LED solo en ciertos horarios o en respuesta a sensores externos.
+	\item Detección de obstáculos en robótica
+	\item Medición de niveles en depósitos de líquidos
+	\item Sistemas de asistencia para estacionamiento
+	\item Sensores de proximidad en automatización industrial
 \end{itemize}
+
+Este proyecto permite comprender la medición ultrasónica y su aplicación en proyectos de control y automatización, reforzando la manipulación de hardware con Raspberry Pi.
+
+\subsection{Fotografías de la Actividad}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.5\textwidth]{C:/Users/mayit/Downloads/Boton Led 1}
-	\caption{Botón LED 1}
+	\includegraphics[width=0.5\textwidth]{imagenes/terminal}
+	\caption{Foto de la terminal con las medidas del Ultrasónico}
 \end{figure}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.5\textwidth]{C:/Users/mayit/Downloads/Boton Led 2}
-	\caption{Botón LED 2}
+	\includegraphics[width=0.5\textwidth]{imagenes/foto1}
+	\caption{Foto de las conexiones}
 \end{figure}
 
-\newpage
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{imagenes/foto2}
+	\caption{Divisor de Voltaje}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{imagenes/foto3}
+	\caption{Conexión Completa}
+\end{figure}
